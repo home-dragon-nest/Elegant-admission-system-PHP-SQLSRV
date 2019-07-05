@@ -111,7 +111,7 @@ while( $row = sqlsrv_fetch_array( $result, SQLSRV_FETCH_ASSOC) )
     $tmprow='<b>'.$row["PODRAZDEL"].'<br>'.$sstatus.'</b><br>'.$work.'<br>'.'--------------------<br>'.$ruk.'<br>'.$dolj.'<br>'.'<b>№ '.$row["NPPN"].' ( '.$row["NARYADN"].')'.'<br>типовой</b>';
     ?>
 
-     <td width="150"> <a href="/naryad.php" onclick="basicPopup(this.href);return false"> Open </a>  <div align="left"> <?php echo $tmprow;?>  </div> </td>
+     <td onClick="basicPopup('/naryad.php');return false"  width="150"> <div align="left"> <?php echo $tmprow;?>  </div> </td>
 
     <!--    <td  onClick="document.location='/naryad.php'" width="150"> <div align="left"> !!!<!!!?php echo $tmprow;?>  </div> </td> -->
 
