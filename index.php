@@ -3,10 +3,7 @@
 
 <html xmlns='http://www.w3.org/1999/xhtml'>
 
-
 <body onload=" loadjavascript()" onresize="onwindowresize()" onkeydown="keydown(event)">
-
-
 
 <meta http-equiv='X-UA-Compatible' content='IE=Edge'/>
 <meta http-equiv='content-type' content='text/html' />
@@ -25,7 +22,8 @@
        border-spacing: 4px; /* Убираем двойные линии между ячейками */
        font-size: 12px; /* размер шрифта*/
        font-family: "Segoe-normal", Arial, Helvetica, sans-serif;
-       /*       table-layout: fixed;*/
+       table-layout: fixed;
+       overflow: hidden;
           }
     TD {
     background: #f5f5f5; /* Цвет фона ячейки */
@@ -56,7 +54,7 @@ else
 }
 
 
-$sql = "SELECT NPPN,PODRAZDEL,NAMEWORK,RUKWORK,NARYADN,BEGWORK,ENDWORK FROM [DOPUSKTEST].[dbo].[TNaryad] WHERE STATUSN>0";
+$sql = "SELECT NPPN,PODRAZDEL,NAMEWORK,RUKWORK,NARYADN,BEGWORK,ENDWORK,STATUSN FROM [DOPUSKTEST].[dbo].[TNaryad] WHERE STATUSN>0";
 $params = array();
 $options = array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
 $result = sqlsrv_query( $conn, $sql , $params, $options );
@@ -69,7 +67,9 @@ $tmprow="";
 
 ?>
 
-<table>
+
+
+<table class="table">
 
 
 
@@ -81,25 +81,40 @@ $tmprow="";
     $dolj='';
     $who='';
     $work='';
+    $sstatus='';
+    $status=0;
 while( $row = sqlsrv_fetch_array( $result, SQLSRV_FETCH_ASSOC) )
 {
     $iall++;
     $ikol++;
     $newline='';
     If ($iall===1) {
-        $newline='<tr>';
+        $newline="<tr>";
         echo $newline;
     }
+    $status=$row["STATUSN"];
+    If ($status ===1) {$sstatus='Статус:Не подготовлен';}
+    If ($status ===2) {$sstatus='Статус:В работе';}
+    If ($status ===3) {$sstatus='Статус:Прикрыт';}
+    If ($status ===4) {$sstatus='Статус:Выдан';}
+    If ($status ===5) {$sstatus='Статус:Не допускались';}
+
     $who=explode(",",$row["RUKWORK"]);
-    $ruk=substr($who[0],0,30);
-    $dolj=substr($who[1],0,30);
+    $ruk=substr($who[0],0,35);
+    $ruk=rtrim($ruk,"!,.-");
+    $dolj=substr($who[1],0,35);
+    $dolj=rtrim($dolj,"!,.-");
 //    $work=mb_strimwidth(wordwrap($row["NAMEWORK"],20,"\n",true),1,160,"...");
 //    $work=wordwrap($row["NAMEWORK"],20,"\n",true);
-    $work = substr(str_pad($row["NAMEWORK"],160),0,160);
-    $tmprow='<b>'.$row["PODRAZDEL"].'</b>'.'<br><br>'.$work.'<br>'.'--------------------<br>'.$ruk.'<br>'.$dolj.'<br>'.'<b>№ '.$row["NPPN"].' ( '.$row["NARYADN"].')'.'<br>типовой</b>';
+    $work = substr(str_pad($row["NAMEWORK"],170),0,170);
+    $Work=rtrim($work,"!,.-");
+    $tmprow='<b>'.$row["PODRAZDEL"].'<br>'.$sstatus.'</b><br>'.$work.'<br>'.'--------------------<br>'.$ruk.'<br>'.$dolj.'<br>'.'<b>№ '.$row["NPPN"].' ( '.$row["NARYADN"].')'.'<br>типовой</b>';
     ?>
 
-    <td width="158"> <div align="left"> <?php echo $tmprow;?>  </div> </td>
+     <td width="150"> <a href="/naryad.php" onclick="basicPopup(this.href);return false"> Open </a>  <div align="left"> <?php echo $tmprow;?>  </div> </td>
+
+    <!--    <td  onClick="document.location='/naryad.php'" width="150"> <div align="left"> !!!<!!!?php echo $tmprow;?>  </div> </td> -->
+
 
     <?php
         $newline='';
@@ -116,11 +131,30 @@ while( $row = sqlsrv_fetch_array( $result, SQLSRV_FETCH_ASSOC) )
 ?>
  </table>
 
+
+
+
 <?php
 sqlsrv_free_stmt($result);
 sqlsrv_close($conn);
 
 ?>
+
+<script>
+    function basicPopup(url) {
+        popupWindow = window.open(url,'popUpWindow','height=300,width=700,left=50,top=50,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no, status=yes')
+    }
+
+</script>
+
+
+
+<form action="2.php" method="post">
+   Директрия : <input type="text" name="directory" /><br />
+    Файл: <input type="text" name="expansion" /><br />
+    <input type="submit" name="sbm" value="создать подкаталог" />
+ </form>
+
 
 </body>
 </html>
