@@ -109,9 +109,10 @@ while( $row = sqlsrv_fetch_array( $result, SQLSRV_FETCH_ASSOC) )
     $work = substr(str_pad($row["NAMEWORK"],170),0,170);
     $Work=rtrim($work,"!,.-");
     $tmprow='<b>'.$row["PODRAZDEL"].'<br>'.$sstatus.'</b><br>'.$work.'<br>'.'--------------------<br>'.$ruk.'<br>'.$dolj.'<br>'.'<b>№ '.$row["NPPN"].' ( '.$row["NARYADN"].')'.'<br>типовой</b>';
+    $idn=$row["NPPN"];
     ?>
 
-     <td onClick="basicPopup('/naryad.php');return false"  width="150"> <div align="left"> <?php echo $tmprow;?>  </div> </td>
+     <td id=$idn type="text" onClick="basicPopup('/naryad.php');return false" value=$idn width="150"> <div align="left"> <?php echo $tmprow;?>  </div> </td>
 
     <!--    <td  onClick="document.location='/naryad.php'" width="150"> <div align="left"> !!!<!!!?php echo $tmprow;?>  </div> </td> -->
 
@@ -142,19 +143,12 @@ sqlsrv_close($conn);
 
 <script>
     function basicPopup(url) {
-        popupWindow = window.open(url,'popUpWindow','height=300,width=700,left=50,top=50,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no, status=yes')
+        popupWindow = window.open(url,'popupWindow','height=300,width=700,left=50,top=50,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no, status=yes')
     }
 
 </script>
 
 
-
-<form action="2.php" method="post">
-   Директрия : <input type="text" name="directory" /><br />
-    Файл: <input type="text" name="expansion" /><br />
-    <input type="submit" name="sbm" value="создать подкаталог" />
- </form>
-
-
 </body>
 </html>
+
