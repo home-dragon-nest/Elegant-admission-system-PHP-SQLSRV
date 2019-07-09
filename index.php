@@ -106,16 +106,19 @@ while( $row = sqlsrv_fetch_array( $result, SQLSRV_FETCH_ASSOC) )
     $dolj=rtrim($dolj,"!,.-");
 //    $work=mb_strimwidth(wordwrap($row["NAMEWORK"],20,"\n",true),1,160,"...");
 //    $work=wordwrap($row["NAMEWORK"],20,"\n",true);
-    $work = substr(str_pad($row["NAMEWORK"],170),0,170);
+    $work = substr(str_pad($row["NAMEWORK"],171),0,172);
     $Work=rtrim($work,"!,.-");
     $tmprow='<b>'.$row["PODRAZDEL"].'<br>'.$sstatus.'</b><br>'.$work.'<br>'.'--------------------<br>'.$ruk.'<br>'.$dolj.'<br>'.'<b>№ '.$row["NPPN"].' ( '.$row["NARYADN"].')'.'<br>типовой</b>';
     $idn=$row["NPPN"];
+    $class='"'.'classification'.'"';
+    $fu=' onclick='.'"'.'basicPopup(';
+    $fu1=');return false'.'"';
+
+
+    echo "<td width='150'>"." <div id='".$idn."'".$fu."'".$idn."'".$fu1." value=$idn  align='left'> ".$tmprow."</div> </td>"
+//    echo "<td id=".$idn.$fu."'/naryad.php'".$fu1." value=$idn width='150'>"." <div align='left'> ".$tmprow."</div> </td>"
+
     ?>
-
-     <td id=$idn type="text" onClick="basicPopup('/naryad.php');return false" value=$idn width="150"> <div align="left"> <?php echo $tmprow;?>  </div> </td>
-
-    <!--    <td  onClick="document.location='/naryad.php'" width="150"> <div align="left"> !!!<!!!?php echo $tmprow;?>  </div> </td> -->
-
 
     <?php
         $newline='';
@@ -141,9 +144,14 @@ sqlsrv_close($conn);
 
 ?>
 
-<script>
-    function basicPopup(url) {
-        popupWindow = window.open(url,'popupWindow','height=300,width=700,left=50,top=50,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no, status=yes')
+
+
+<script language="javascript">
+
+        function basicPopup(xid) {
+var price = document.getElementById(xid);
+alert(price.innerHTML);
+        popupWindow = window.open('/naryad.php','popupWindow','height=800,width=1000,left=50,top=50,resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no, status=yes');
     }
 
 </script>
@@ -151,4 +159,3 @@ sqlsrv_close($conn);
 
 </body>
 </html>
-
